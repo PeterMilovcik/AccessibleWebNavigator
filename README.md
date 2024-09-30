@@ -188,10 +188,6 @@ Welcome to our workshop on enhancing web accessibility using .NET technologies a
 - Prepare your systems and let's code!
 
 ---
-
-![QR Code to link to this page|600](AccessibleWebNavigatorWorkshopQR.png)
-
----
 # Workshop Block 1: Introduction, Setup, and Command Infrastructure with Dependency Injection
 
 **Duration:** 50 min. + 10 min. break
