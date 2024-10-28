@@ -30,7 +30,7 @@ public static class ServiceConfigurator
         services.AddSingleton<ICommand, ExitCommand>();
         services.AddSingleton<ICommand, NavigateCommand>();
         services.AddSingleton<ICommand, SummarizeCommand>();
-        services.AddSingleton<ICommand, QuestionAnswerCommand>();
+        services.AddSingleton<ICommand, AiCommand>();
 
         // Register the CommandInvoker
         services.AddSingleton<CommandInvoker>();

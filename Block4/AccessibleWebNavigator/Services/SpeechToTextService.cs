@@ -33,7 +33,9 @@ public class SpeechToTextService : ISpeechToTextService
 
     private async Task RecordAudioAsync(string outputFilePath, CancellationToken cancellationToken)
     {
-        using var waveIn = new WaveInEvent();
+        using var waveIn = new WaveInEvent();        
+        waveIn.WaveFormat = new WaveFormat(44100, 16, 1); // 44.1 kHz, 16-bit, mono
+
         using var writer = new WaveFileWriter(outputFilePath, waveIn.WaveFormat);
 
         var tcs = new TaskCompletionSource<bool>();
@@ -50,7 +52,6 @@ public class SpeechToTextService : ISpeechToTextService
             tcs.TrySetResult(true);
         };
 
-        waveIn.WaveFormat = new WaveFormat(16000, 1); // 16 kHz, mono
         waveIn.StartRecording();
 
         using (cancellationToken.Register(waveIn.StopRecording))

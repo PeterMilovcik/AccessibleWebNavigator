@@ -14,6 +14,7 @@ public class ListActionsCommand : ICommand
     }
 
     public bool CanExecute(string commandInput) => 
+        commandInput.Trim().ToLower().StartsWith("list actions", StringComparison.OrdinalIgnoreCase) ||
         commandInput.Trim().ToLower().StartsWith("actions", StringComparison.OrdinalIgnoreCase);
 
     public async Task<string> ExecuteAsync(string commandInput)

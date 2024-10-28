@@ -10,7 +10,7 @@ public class OpenAIService : IOpenAIService
     public OpenAIService(IApiKeyProvider apiKeyProvider)
     {
         var apiKey = apiKeyProvider.GetOpenAiApiKey();
-        _chatClient = new ChatClient("gpt-3.5-turbo", apiKey);
+        _chatClient = new ChatClient("gpt-4o-mini", apiKey);
         // If you have your own API Key, you can try different models as well, but be aware of the billing costs
         // here are some suggestions: gpt-4, gpt-4-turbo, gpt-4o-mini, o1-mini, o1-preview
         // for more details about models and their parameters, visit: https://platform.openai.com/docs/models

@@ -721,7 +721,7 @@ public class OpenAIService : IOpenAIService
 
     public OpenAIService(string apiKey)
     {
-        _chatClient = new ChatClient("gpt-3.5-turbo", apiKey);
+        _chatClient = new ChatClient("gpt-4o-mini", apiKey);
         // If you have your own API Key, you can try different models as well, but be aware of the billing costs
         // here are some suggestions: gpt-4, gpt-4-turbo, gpt-4o-mini, o1-mini, o1-preview
         // for more details about models and their parameters, visit: https://platform.openai.com/docs/models
@@ -1546,7 +1546,7 @@ public class OpenAIService : IOpenAIService
     public OpenAIService(IApiKeyProvider apiKeyProvider)
     {
         var apiKey = apiKeyProvider.GetOpenAiApiKey();
-        _chatClient = new ChatClient("gpt-3.5-turbo", apiKey);
+        _chatClient = new ChatClient("gpt-4o-mini", apiKey);
         // If you have your own API Key, you can try different models as well, but be aware of the billing costs
         // here are some suggestions: gpt-4, gpt-4-turbo, gpt-4o-mini, o1-mini, o1-preview
         // for more details about models and their parameters, visit: https://platform.openai.com/docs/models
@@ -2009,7 +2009,9 @@ public class SpeechToTextService : ISpeechToTextService
 
     private async Task RecordAudioAsync(string outputFilePath, CancellationToken cancellationToken)
     {
-        using var waveIn = new WaveInEvent();
+        using var waveIn = new WaveInEvent();        
+        waveIn.WaveFormat = new WaveFormat(44100, 16, 1); // 44.1 kHz, 16-bit, mono
+
         using var writer = new WaveFileWriter(outputFilePath, waveIn.WaveFormat);
 
         var tcs = new TaskCompletionSource<bool>();
@@ -2026,7 +2028,6 @@ public class SpeechToTextService : ISpeechToTextService
             tcs.TrySetResult(true);
         };
 
-        waveIn.WaveFormat = new WaveFormat(16000, 1); // 16 kHz, mono
         waveIn.StartRecording();
 
         using (cancellationToken.Register(waveIn.StopRecording))
@@ -2487,7 +2488,7 @@ public class OpenAIService : IOpenAIService
     public OpenAIService(IApiKeyProvider apiKeyProvider)
     {
         var apiKey = apiKeyProvider.GetOpenAiApiKey();
-        _chatClient = new ChatClient("gpt-3.5-turbo", apiKey);
+        _chatClient = new ChatClient("gpt-4o-mini", apiKey);
         // If you have your own API Key, you can try different models as well, but be aware of the billing costs
         // here are some suggestions: gpt-4, gpt-4-turbo, gpt-4o-mini, o1-mini, o1-preview
         // for more details about models and their parameters, visit: https://platform.openai.com/docs/models
@@ -2702,6 +2703,7 @@ public class ListActionsCommand : ICommand
     }
 
     public bool CanExecute(string commandInput) => 
+        commandInput.Trim().ToLower().StartsWith("list actions", StringComparison.OrdinalIgnoreCase) ||
         commandInput.Trim().ToLower().StartsWith("actions", StringComparison.OrdinalIgnoreCase);
 
     public async Task<string> ExecuteAsync(string commandInput)

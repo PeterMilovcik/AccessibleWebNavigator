@@ -31,7 +31,7 @@ namespace AccessibleWebNavigator.Services
             services.AddSingleton<ICommand, ExitCommand>();
             services.AddSingleton<ICommand, NavigateCommand>();
             services.AddSingleton<ICommand, SummarizeCommand>();
-            services.AddSingleton<ICommand, QuestionAnswerCommand>();
+            services.AddSingleton<ICommand, AiCommand>();
             services.AddSingleton<ICommand, ListActionsCommand>();
             services.AddSingleton<ICommand, PerformActionCommand>();
 
