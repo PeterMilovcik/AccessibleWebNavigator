@@ -1,6 +1,8 @@
+---
 # Building an AI-Powered Web Navigator for the Visually Impaired with .NET 8
 
 ---
+
 Welcome to our workshop on enhancing web accessibility using .NET technologies and AI! Today, you'll learn how to build applications that make web navigation easier for visually impaired users. Get ready for coding sessions, exploring cutting-edge tools, and collaboration with fellow developers to create more accessible digital experiences.
 
 ---
@@ -186,6 +188,12 @@ Welcome to our workshop on enhancing web accessibility using .NET technologies a
 
 - Let's dive into **Block 1** and start our journey!
 - Prepare your systems and let's code!
+
+---
+
+https://bit.ly/4epYiSx
+
+https://github.com/PeterMilovcik/AccessibleWebNavigator
 
 ---
 # Workshop Block 1: Introduction, Setup, and Command Infrastructure with Dependency Injection
@@ -716,9 +724,10 @@ public class OpenAIService : IOpenAIService
 {
     private readonly ChatClient _chatClient;
 
-    public OpenAIService(string apiKey)
+    public OpenAIService(IApiKeyProvider apiKeyProvider)
     {
-        _chatClient = new ChatClient("gpt-3.5-turbo", apiKey);
+        var apiKey = apiKeyProvider.GetOpenAiApiKey();
+        _chatClient = new ChatClient("gpt-3.5-turbo", apiKey);
         // If you have your own API Key, you can try different models as well, but be aware of the billing costs
         // here are some suggestions: gpt-4, gpt-4-turbo, gpt-4o-mini, o1-mini, o1-preview
         // for more details about models and their parameters, visit: https://platform.openai.com/docs/models
@@ -780,7 +789,8 @@ dotnet tool install --global Microsoft.Playwright.CLI
 playwright install
 ```
 
-**Note:** If you encounter permission issues, you might need to run the install command with `sudo` (on macOS/Linux) or as an administrator (on Windows).
+**Note 1:** If you encounter permission issues, you might need to run the install command with `sudo` (on macOS/Linux) or as an administrator (on Windows).
+**Note 2:** If you encounter playwright install issues, you might need to do the build command with `dotnet build`.
 
 ### 2.3.2 Creating the IWebNavigator Interface
 
@@ -2007,7 +2017,7 @@ public class SpeechToTextService : ISpeechToTextService
     private async Task RecordAudioAsync(string outputFilePath, CancellationToken cancellationToken)
     {
         using var waveIn = new WaveInEvent();
-        using var writer = new WaveFileWriter(outputFilePath, waveIn.WaveFormat);
+        await using var writer = new WaveFileWriter(outputFilePath, waveIn.WaveFormat);
 
         var tcs = new TaskCompletionSource<bool>();
 
@@ -2026,7 +2036,7 @@ public class SpeechToTextService : ISpeechToTextService
         waveIn.WaveFormat = new WaveFormat(16000, 1); // 16 kHz, mono
         waveIn.StartRecording();
 
-        using (cancellationToken.Register(waveIn.StopRecording))
+        await using (cancellationToken.Register(waveIn.StopRecording))
         {
             await tcs.Task;
         }
@@ -2699,6 +2709,7 @@ public class ListActionsCommand : ICommand
     }
 
     public bool CanExecute(string commandInput) => 
+        commandInput.Trim().ToLower().StartsWith("list actions", StringComparison.OrdinalIgnoreCase) ||
         commandInput.Trim().ToLower().StartsWith("actions", StringComparison.OrdinalIgnoreCase);
 
     public async Task<string> ExecuteAsync(string commandInput)
@@ -2957,6 +2968,10 @@ After the workshop, you can continue to focus on:
 - **Enhancing Error Handling and User Feedback:**
 	- Provide more informative messages and suggestions when actions fail.
 	- Implement logging for debugging and monitoring.
+- **Using Realtime API for Speech-to-Speech Communication**:
+	- [Introducing the Realtime API | OpenAI](https://openai.com/index/introducing-the-realtime-api/)
+
+Want an additional workshop Block for these? Let me know at peter.milovcik@siemens-healthineers.com
 
 ### 5.7.3 Final Thoughts
 
@@ -3017,3 +3032,5 @@ Let's keep the conversation going! I'm looking forward to seeing how you apply w
 ---
 
 > *Happy Coding!*
+
+---
